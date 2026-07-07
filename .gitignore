@@ -1,0 +1,54 @@
+# Secrets and environment
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+.jwt_secret
+secrets/
+*_secret*
+*_token*
+credentials.json
+
+# Data / sessions / databases
+*.db
+*.sqlite
+*.sqlite3
+sessions/
+.cs/
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Local per-developer settings (md, json, etc.)
+.claude/*.local.*
+
+# Local commands (dev workflows)
+.claude/commands/
+
+# Response cache
+.claude/council-cache/
+
+# Issue tracker (personal)
+.beads/
+
+# Session state (cs session manager)
+.cs/
+
+# Web/page cache (claude-crawl)
+.claude-crawl/
+
+# Skill-creator iteration output
+claude-council-workspace/
+
+# OS files
+.DS_Store
+
+# Editor files
+*.swp
+*.swo
+*~
+autoresearch-results.tsv

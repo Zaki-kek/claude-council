@@ -1,0 +1,19 @@
+{
+  "name": "claude-council",
+  "version": "2026.6.1",
+  "description": "Consult multiple AI coding agents (Gemini, OpenAI, Grok, Perplexity, plus codex and gemini CLIs when installed) to get diverse perspectives on coding problems",
+  "author": {
+    "name": "Zaki-kek"
+  },
+  "keywords": [
+    "multi-agent",
+    "council",
+    "gemini",
+    "openai",
+    "grok",
+    "perplexity",
+    "codex",
+    "cli",
+    "perspectives"
+  ]
+}
