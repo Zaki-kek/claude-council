@@ -1,0 +1,36 @@
+name: CI
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+
+jobs:
+  test:
+    name: bats
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install bats
+        uses: bats-core/bats-action@4.0.0
+        with:
+          # Only the core bats runner is needed; helper libs are vendored in tests/.
+          support-install: false
+          assert-install: false
+          detik-install: false
+          file-install: false
+
+      - name: Run bats tests
+        env:
+          # Never spawn the streaming tmux pane in CI (it waits for a keypress).
+          COUNCIL_NO_PANE: "1"
+          COUNCIL_AUTO_CLOSE: "1"
+        run: |
+          # One test (it2_set_tab_color) shells out to the macOS-only `it2setcolor`
+          # binary and cannot pass on a Linux runner; exclude it by name so the rest
+          # of the suite gates every push. Everything else runs unmodified.
+          bats --tap \
+            --negative-filter "it2_set_tab_color emits escape when in iTerm2" \
+            tests/*.bats

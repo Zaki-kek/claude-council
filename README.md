@@ -1,5 +1,7 @@
 # claude-council
 
+[![CI](https://github.com/Zaki-kek/claude-council/actions/workflows/ci.yml/badge.svg)](https://github.com/Zaki-kek/claude-council/actions/workflows/ci.yml)
+
 A Claude Code plugin that consults multiple AI coding agents in parallel and shows you their answers side-by-side. Useful when one model's bias could mislead you and the right call depends on cross-checking - architecture decisions, debugging dead ends, security reviews, framework picks.
 
 [Quick start](#quick-start) · [Usage](#usage) · [Configuration](#configuration) · [Reference](#reference) · [Development](#development)
