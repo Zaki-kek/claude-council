@@ -2,6 +2,8 @@
 # ABOUTME: Provider discovery + selection policy shared by query-council.sh
 # ABOUTME: Caller must export PROVIDERS_DIR before sourcing for discover_providers
 
+# shellcheck disable=SC2178,SC2128 # intentional space-padded string membership for bash 3.2 (var reused as array elsewhere)
+
 # Discover which provider scripts are available to query.
 # API providers are gated on their <NAME>_API_KEY env var; subscription-auth
 # CLI providers (codex, gemini-cli) are gated on their binary being on PATH.

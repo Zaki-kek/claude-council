@@ -2,6 +2,8 @@
 # ABOUTME: Queries xAI Grok API with a prompt
 # ABOUTME: Returns the model's response to stdout
 
+# shellcheck disable=SC2034 # DEBUG toggle read on demand by conditional debug blocks
+
 set -euo pipefail
 
 # Source shared libraries

@@ -31,7 +31,8 @@ setup() {
 
 # Teardown - runs after each test
 teardown() {
-    rm -rf "$TEST_CACHE_DIR"/*
+    # :? guards against an unset/empty var ever expanding to `rm -rf /*`.
+    rm -rf "${TEST_CACHE_DIR:?}"/*
 }
 
 # Helper: check if command exists

@@ -2,6 +2,8 @@
 # ABOUTME: Shared system-prompt + verbosity directive for all providers
 # ABOUTME: Single source of truth for both the base prompt and verbosity levels
 
+# shellcheck disable=SC2034 # BASE_SYSTEM_PROMPT is consumed by every sourcing provider script
+
 # Base system prompt — used by all four providers. Edit here to change
 # the persona globally. Perplexity appends an additional citation clause.
 BASE_SYSTEM_PROMPT="You are an expert software engineering consultant. Provide clear, practical responses with code examples where helpful. Be thorough but concise - focus on actionable guidance."

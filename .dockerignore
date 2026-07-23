@@ -1,0 +1,30 @@
+# VCS
+.git
+.gitignore
+
+# Secrets - never copy into an image
+.env
+.env.*
+*.pem
+*.key
+.jwt_secret
+secrets/
+*_secret*
+*_token*
+credentials.json
+
+# Local caches / session state / databases
+.claude/council-cache
+.beads
+.cs
+.claude-crawl
+sessions/
+*.db
+*.sqlite
+*.sqlite3
+
+# OS / editor cruft
+.DS_Store
+*.swp
+*.swo
+*~

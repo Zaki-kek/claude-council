@@ -2,6 +2,8 @@
 # ABOUTME: Queries multiple AI providers in parallel and collects responses
 # ABOUTME: Supports filtering by provider and outputs JSON results
 
+# shellcheck disable=SC2034 # BLUE/WHITE consumed via echo -e; COUNCIL_HAS_TTY read by display.sh signal helpers
+
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -13,6 +15,7 @@ source "${SCRIPT_DIR}/lib/roles.sh"
 source "${SCRIPT_DIR}/lib/keys.sh"
 source "${SCRIPT_DIR}/lib/display.sh"
 source "${SCRIPT_DIR}/lib/verbosity.sh"
+source "${SCRIPT_DIR}/lib/log.sh"
 resolve_grok_key
 
 # Helper: current time in milliseconds (falls back to seconds if python3 missing)
@@ -151,7 +154,7 @@ while [[ $# -gt 0 ]]; do
             break
             ;;
         -*)
-            echo "Error: Unknown flag: $1" >&2
+            log_error "Unknown flag: $1"
             usage
             ;;
         *)
@@ -255,7 +258,7 @@ else
 fi
 
 if [[ ${#PROVIDERS[@]} -eq 0 ]]; then
-    echo "Error: No providers configured." >&2
+    log_error "No providers configured."
     echo "  Set an API key (GEMINI_API_KEY, OPENAI_API_KEY, XAI_API_KEY/GROK_API_KEY, or PERPLEXITY_API_KEY)" >&2
     echo "  or install a CLI agent (codex, gemini)." >&2
     exit 1
@@ -263,7 +266,8 @@ fi
 
 # Create temp directory for parallel results
 TEMP_DIR=$(mktemp -d)
-trap "rm -rf $TEMP_DIR" EXIT
+# Single-quote the trap so $TEMP_DIR expands when the signal fires, not now.
+trap 'rm -rf "$TEMP_DIR"' EXIT
 
 # Query provider and save result to temp file
 # Uses cache if available and USE_CACHE=true
@@ -358,8 +362,9 @@ RESET='\033[0m'
 format_providers() {
     local formatted=""
     for p in "$@"; do
-        local color=$(provider_color "$p")
-        local emoji=$(provider_emoji "$p")
+        local color emoji
+        color=$(provider_color "$p")
+        emoji=$(provider_emoji "$p")
         formatted+="${emoji} ${color}${p}${RESET} "
     done
     echo "$formatted"

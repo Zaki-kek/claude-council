@@ -34,3 +34,58 @@ jobs:
           bats --tap \
             --negative-filter "it2_set_tab_color emits escape when in iTerm2" \
             tests/*.bats
+
+  shellcheck:
+    name: shellcheck
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install shellcheck (pinned v0.10.0)
+        run: |
+          # Pinned static binary straight from koalaman - no apt, no unpinned
+          # action, so the linter version never drifts under us. Full literal
+          # URL (no variable) keeps the pin greppable and auditable.
+          curl -fsSL \
+            "https://github.com/koalaman/shellcheck/releases/download/v0.10.0/shellcheck-v0.10.0.linux.x86_64.tar.xz" \
+            -o /tmp/shellcheck.tar.xz
+          tar -xJf /tmp/shellcheck.tar.xz -C /tmp
+          sudo install /tmp/shellcheck-v0.10.0/shellcheck /usr/local/bin/shellcheck
+          shellcheck --version | grep -F 0.10.0
+
+      - name: Run shellcheck (severity=warning)
+        run: |
+          # SC1091: sourced paths resolve at runtime, not lint time. The gate
+          # covers every scripts/*.sh (incl. scripts/dev/*) plus test helpers.
+          shellcheck -S warning -e SC1091 $(find scripts -name "*.sh") tests/*.bash
+
+  smoke:
+    name: mock-smoke
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: No-providers path exits non-zero with empty stdout
+        env:
+          COUNCIL_NO_PANE: "1"
+          COUNCIL_AUTO_CLOSE: "1"
+        run: |
+          # Integration contour without any keys: strip every provider env var
+          # and a PATH that hides codex/gemini CLIs, then assert the documented
+          # contract - stdout stays empty, exit is non-zero, error on stderr.
+          set +e
+          env -u OPENAI_API_KEY -u GEMINI_API_KEY -u GROK_API_KEY \
+              -u XAI_API_KEY -u PERPLEXITY_API_KEY \
+              PATH=/usr/bin:/bin \
+              bash scripts/query-council.sh "smoke ping" >so.txt 2>se.txt
+          code=$?
+          set -e
+          echo "exit=$code"
+          echo "--- stdout ---"; cat so.txt
+          echo "--- stderr ---"; cat se.txt
+          if [ "$code" -eq 0 ]; then echo "FAIL: expected non-zero exit"; exit 1; fi
+          if [ -s so.txt ]; then echo "FAIL: stdout must be empty"; exit 1; fi
+          grep -Fq "No providers configured" se.txt || { echo "FAIL: missing error"; exit 1; }
+          echo "mock-smoke OK"

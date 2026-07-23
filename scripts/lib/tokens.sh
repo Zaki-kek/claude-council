@@ -20,7 +20,7 @@ bump_for_reasoning() {
     shift 3
     local pattern
     for pattern in "$@"; do
-        # shellcheck disable=SC2053
+        # shellcheck disable=SC2053 # glob match intended (pattern may contain wildcards), not literal compare
         if [[ "$model" == $pattern ]]; then
             local bumped=$(( base * 8 ))
             (( bumped < 32768 )) && bumped=32768

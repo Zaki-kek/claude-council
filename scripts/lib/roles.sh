@@ -2,6 +2,8 @@
 # ABOUTME: Role management for council queries
 # ABOUTME: Loads roles from config and builds role-injected prompts
 
+# shellcheck disable=SC2178,SC2128 # intentional space-padded string membership for bash 3.2 (var reused as array elsewhere)
+
 set -euo pipefail
 
 ROLES_SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"

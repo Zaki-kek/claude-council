@@ -2,6 +2,8 @@
 # ABOUTME: Checks connectivity and configuration status of all council providers
 # ABOUTME: Outputs status table with connection times and model info
 
+# shellcheck disable=SC2034 # BLUE/WHITE ANSI vars consumed indirectly via echo -e color codes
+
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"

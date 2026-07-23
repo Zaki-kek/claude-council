@@ -2,6 +2,8 @@
 # ABOUTME: Formats council JSON output for terminal display
 # ABOUTME: Creates colored boxes, handles quiet mode, debate mode, and roles
 
+# shellcheck disable=SC2034 # ANSI color + box-glyph vars consumed indirectly via echo -e / printf format strings
+
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
